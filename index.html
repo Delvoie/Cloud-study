@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AWS Cloud Practitioner Flashcards</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            padding: 30px;
+            backdrop-filter: blur(10px);
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .header h1 {
+            color: #2c3e50;
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .progress {
+            background: #ecf0f1;
+            border-radius: 10px;
+            height: 8px;
+            margin: 20px 0;
+            overflow: hidden;
+        }
+
+        .progress-bar {
+            background: linear-gradient(90deg, #3498db, #2ecc71);
+            height: 100%;
+            border-radius: 10px;
+            transition: width 0.3s ease;
+        }
+
+        .card-container {
+            perspective: 1000px;
+            margin: 30px 0;
+        }
+
+        .flashcard {
+            position: relative;
+            width: 100%;
+            height: 450px;
+            cursor: pointer;
+            transform-style: preserve-3d;
+            transition: transform 0.6s;
+        }
+
+        .flashcard.flipped {
+            transform: rotateY(180deg);
+        }
+
+        .card-face {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            border-radius: 15px;
+            display: flex;
+            flex-direction: column;
+            padding: 25px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            overflow-y: auto;
+        }
+
+        .card-front {
+            background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 50%, #fecfef 100%);
+        }
+
+        .card-back {
+            background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
+            transform: rotateY(180deg);
+        }
+
+        .card-content {
+            font-size: 1rem;
+            line-height: 1.5;
+            color: #2c3e50;
+            font-weight: 500;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .question-text {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 15px;
+            flex-shrink: 0;
+        }
+
+        .answer-options {
+            text-align: left;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .answer-options div {
+            padding: 8px 10px;
+            border-radius: 6px;
+            background: rgba(255, 255, 255, 0.3);
+            margin: 0;
+        }
+
+        .correct-answer {
+            background: rgba(46, 204, 113, 0.3);
+            border-radius: 8px;
+            padding: 15px;
+            font-weight: bold;
+            font-size: 1.1rem;
+            line-height: 1.4;
+            text-align: center;
+            margin: auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex: 1;
+        }
+
+        .controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 30px;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .btn:active {
+            transform: translateY(0);
+        }
+
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .card-info {
+            color: #7f8c8d;
+            font-weight: 500;
+        }
+
+        .shuffle-btn {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        }
+
+        .flip-hint {
+            text-align: center;
+            color: #7f8c8d;
+            margin-top: 15px;
+            font-style: italic;
+            opacity: 0.8;
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                padding: 15px;
+            }
+            
+            .header h1 {
+                font-size: 1.8rem;
+            }
+            
+            .flashcard {
+                height: 400px;
+            }
+            
+            .card-face {
+                padding: 20px;
+            }
+            
+            .card-content {
+                font-size: 0.95rem;
+            }
+            
+            .question-text {
+                font-size: 1rem;
+                margin-bottom: 12px;
+            }
+            
+            .answer-options div {
+                padding: 6px 8px;
+                font-size: 0.9rem;
+            }
+            
+            .correct-answer {
+                font-size: 1rem;
+                padding: 12px;
+            }
+            
+            .controls {
+                flex-direction: column;
+            }
+            
+            .btn {
+                width: 100%;
+                max-width: 200px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>AWS Cloud Practitioner</h1>
+            <div class="progress">
+                <div class="progress-bar" id="progressBar"></div>
+            </div>
+        </div>
+
+        <div class="card-container">
+            <div class="flashcard" id="flashcard" onclick="flipCard()">
+                <div class="card-face card-front">
+                    <div class="card-content">
+                        <div class="question-text" id="questionText"></div>
+                        <div class="answer-options" id="answerOptions"></div>
+                    </div>
+                </div>
+                <div class="card-face card-back">
+                    <div class="card-content">
+                        <div id="correctAnswer"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="flip-hint">Click the card to reveal the answer</div>
+
+        <div class="controls">
+            <button class="btn" id="prevBtn" onclick="previousCard()">← Previous</button>
+            <div class="card-info">
+                <span id="cardCounter">1 / 27</span>
+            </div>
+            <button class="btn shuffle-btn" onclick="shuffleCards()">🔀 Shuffle</button>
+            <button class="btn" id="nextBtn" onclick="nextCard()">Next →</button>
+        </div>
+    </div>
+
+    <script>
+        const flashcards = [
+            {
+                question: "Which IT requirement would lead an architect to choose an Infrastructure-as-a-Service (IaaS) cloud service model?",
+                options: [
+                    "A. A company wants to run a managed instance for the marketplace.",
+                    "B. A company wants to maintain control of its applications but avoid maintaining servers and operating systems.",
+                    "C. A company wants to maintain the highest level of flexibility over its IT resources.",
+                    "D. A company wants to use a web-based email solution."
+                ],
+                correct: "C. A company wants to maintain the highest level of flexibility over its IT resources."
+            },
+            {
+                question: "Which statement is an advantage of the Platform-as-a-Service (PaaS) cloud service model?",
+                options: [
+                    "A. PaaS avoids the need to manage operating systems.",
+                    "B. PaaS reduces the need to handle application deployments.",
+                    "C. PaaS provides the greatest level of control over IT resources.",
+                    "D. PaaS is the most similar to traditional on-premises models for IT resources."
+                ],
+                correct: "A. PaaS avoids the need to manage operating systems."
+            },
+            {
+                question: "Which TWO of the following are advantages of cloud computing for a company moving from a traditional on-premises model?",
+                options: [
+                    "A. The company can invest in more capital (fixed) expenses and reduce their variable expenses.",
+                    "B. IT teams can make capacity decisions before deploying applications so that they always have excess capacity.",
+                    "C. The company can focus less on infrastructure and focus more on differentiating the business.",
+                    "D. Resources can be created, scaled up, scaled down, or destroyed based on demand.",
+                    "E. All on-premises server licenses can be easily transferred and managed centrally in the cloud."
+                ],
+                correct: "C. The company can focus less on infrastructure and focus more on differentiating the business.<br>D. Resources can be created, scaled up, scaled down, or destroyed based on demand."
+            },
+            {
+                question: "How do economies of scale help customers moving to cloud computing from on-premises computing?",
+                options: [
+                    "A. Customers can scale servers horizontally.",
+                    "B. Customers can achieve lower variable costs and scale infrastructure beyond what's possible on-premises.",
+                    "C. Customers have full control of their infrastructure.",
+                    "D. Customers can deploy resources globally."
+                ],
+                correct: "B. Customers can achieve lower variable costs and scale infrastructure beyond what's possible on-premises."
+            },
+            {
+                question: "How does cloud computing improve a company's ability to provision resources to meet capacity demands compared to on-premises computing?",
+                options: [
+                    "A. Cloud resources can scale up or down based on demand.",
+                    "B. Cloud resources can be cost-forecasted.",
+                    "C. Cloud resources can be locked down to the resource level.",
+                    "D. Cloud resources can experience peaks and valleys in usage."
+                ],
+                correct: "A. Cloud resources can scale up or down based on demand."
+            },
+            {
+                question: "Which statement describes the business perspective of the AWS Cloud Adoption Framework?",
+                options: [
+                    "A. Stakeholders can create a strong business case for cloud adoption and prioritize cloud-adoption initiatives.",
+                    "B. Stakeholders can evaluate organizational structures and roles, new skill and process requirements, and identify gaps.",
+                    "C. Stakeholders can use architectural dimensions and models to understand and communicate the nature of IT systems and their relationships.",
+                    "D. Stakeholders can focus on the skills and processes that are needed to align IT strategy and goals with business strategy and goals."
+                ],
+                correct: "A. Stakeholders can create a strong business case for cloud adoption and prioritize cloud-adoption initiatives."
+            },
+            {
+                question: "Which statement accurately describes AWS pricing?",
+                options: [
+                    "A. Outbound data transfers aren't charged.",
+                    "B. Companies must sign a long-term contract to be able to pay only for what they use.",
+                    "C. Volume-based discounts are available when usage increases (on some services).",
+                    "D. Companies can reserve capacity on some services, but it doesn't impact the cost."
+                ],
+                correct: "C. Volume-based discounts are available when usage increases (on some services)."
+            },
+            {
+                question: "Which TWO statements about how a company would use AWS Organizations are accurate?",
+                options: [
+                    "A. A company can use AWS Organizations' consolidated identity and access management (IAM) feature to replace the existing IAM system for an individual account.",
+                    "B. A company can only manage AWS Organizations through the AWS Management Console.",
+                    "C. A company can use AWS Organizations to create security groups that control access to resources.",
+                    "D. A company can consolidate and centrally manage multiple AWS accounts.",
+                    "E. A company can benefit from volume discounts from consolidated billing."
+                ],
+                correct: "D. A company can consolidate and centrally manage multiple AWS accounts.<br>E. A company can benefit from volume discounts from consolidated billing."
+            },
+            {
+                question: "Which statement accurately describes how customers can use AWS Support?",
+                options: [
+                    "A. Customers must choose one of three support plans: Basic Support, Business Support, and Enterprise Support.",
+                    "B. Customers should contact their Support Concierge to provide quick and efficient technical support.",
+                    "C. Customers can get AWS Support for both experimental non-production accounts and for business-critical production accounts.",
+                    "D. Customers are assigned a Technical Account Manager (TAM) for all AWS Support plans."
+                ],
+                correct: "C. Customers can get AWS Support for both experimental non-production accounts and for business-critical production accounts."
+            },
+            {
+                question: "Which TWO factors are considered in calculating the Total Cost of Ownership (TCO) for the AWS Cloud?",
+                options: [
+                    "A. The number of groups that need to be migrated to the cloud.",
+                    "B. The number of servers that need to be migrated to the cloud.",
+                    "C. The amount of storage that needs to be migrated to the cloud.",
+                    "D. The number of roles that need to be migrated to the cloud.",
+                    "E. The number of users that need to be migrated to the cloud."
+                ],
+                correct: "B. The number of servers that need to be migrated to the cloud.<br>C. The amount of storage that needs to be migrated to the cloud."
+            },
+            {
+                question: "A cloud practitioner wants to visualize their AWS costs per EC2 instance type for the past 3 months. Which AWS tool or feature should they use?",
+                options: [
+                    "A. AWS Cost Explorer",
+                    "B. AWS Bills page",
+                    "C. AWS Budgets",
+                    "D. AWS Pricing Calculator"
+                ],
+                correct: "A. AWS Cost Explorer"
+            },
+            {
+                question: "How does the AWS Billing Dashboard help companies analyze their AWS usage to find potential cost-saving opportunities?",
+                options: [
+                    "A. The billing dashboard shows the pricing models for all of the AWS services that are used in your account and where your usage falls in the free tier.",
+                    "B. The billing dashboard lists all AWS accounts with activity in the previous 6 months and a summary of spending for each account.",
+                    "C. The billing dashboard lists the costs incurred over the past month by service, by AWS Region, and by linked accounts.",
+                    "D. The billing dashboard shows the status of the month-to-date AWS expenditure and the AWS services that account for the majority of the overall expenditure."
+                ],
+                correct: "D. The billing dashboard shows the status of the month-to-date AWS expenditure and the AWS services that account for the majority of the overall expenditure."
+            },
+            {
+                question: "Which statement about AWS Regions is true?",
+                options: [
+                    "A. All AWS accounts can access all AWS Regions.",
+                    "B. Data stored in an AWS Region isn't subject to geographical compliance requirements.",
+                    "C. All available Regions are enabled by default in an AWS account.",
+                    "D. Using a Region as close as possible to users can reduce latency."
+                ],
+                correct: "D. Using a Region as close as possible to users can reduce latency."
+            },
+            {
+                question: "What is the relationship between AWS Regions, Availability Zones, and data centers?",
+                options: [
+                    "A. Each Region has a set of data centers. Each data center maps to one Availability Zone.",
+                    "B. Each Region has locations called Availability Zones. Each Availability Zone has data centers.",
+                    "C. Each Availability Zone includes data centers. Each data center in an Availability Zone is located in a different geographical Region.",
+                    "D. A set of data centers in a geographical area create a Region. Availability Zones are connections between Regions."
+                ],
+                correct: "B. Each Region has locations called Availability Zones. Each Availability Zone has data centers."
+            },
+            {
+                question: "Which statement about edge locations is true?",
+                options: [
+                    "A. AWS points of presence provide two to three edge locations per Region.",
+                    "B. Amazon CloudFront uses edge locations and Regional edge caches to deliver content with lower latency.",
+                    "C. Regional edge caches are used to cache data that's frequently updated and must be refreshed continuously.",
+                    "D. The AWS global network includes a large number of Regional edge caches and a smaller number of edge locations to deliver content to users."
+                ],
+                correct: "B. Amazon CloudFront uses edge locations and Regional edge caches to deliver content with lower latency."
+            },
+            {
+                question: "Which TWO statements about responsibility are accurate based on the AWS Shared Responsibility Model?",
+                options: [
+                    "A. Customers are responsible for managing their user data.",
+                    "B. AWS is responsible for the configuration of security groups.",
+                    "C. AWS is responsible for deciding what data to encrypt in customers' Amazon S3 buckets.",
+                    "D. AWS is responsible for the physical security of data centers.",
+                    "E. Customers are responsible for the installation, maintenance, and decommissioning of the hardware that they use in the AWS data c

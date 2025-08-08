@@ -446,4 +446,210 @@
                     "B. AWS is responsible for the configuration of security groups.",
                     "C. AWS is responsible for deciding what data to encrypt in customers' Amazon S3 buckets.",
                     "D. AWS is responsible for the physical security of data centers.",
-                    "E. Customers are responsible for the installation, maintenance, and decommissioning of the hardware that they use in the AWS data c
+                    "E. Customers are responsible for the installation, maintenance, and decommissioning of the hardware that they use in the AWS data center."
+                ],
+                correct: "A. Customers are responsible for managing their user data.<br>D. AWS is responsible for the physical security of data centers."
+            },
+            {
+                question: "An AWS account administrator wants to grant temporary cross-account access that allows external users access to specific resources within their own account. Which action would align with the best practice of using temporary sessions?",
+                options: [
+                    "A. Create an IAM group, grant resource permissions to the group, then add IAM users to the group.",
+                    "B. Create a new IAM user account for each user that needs access.",
+                    "C. Create an identity and access management (IAM) role that can be assumed by external users and grant it permissions to the specific resources.",
+                    "D. Create an IAM policy that grants external users access to the specific resources."
+                ],
+                correct: "C. Create an identity and access management (IAM) role that can be assumed by external users and grant it permissions to the specific resources."
+            },
+            {
+                question: "Which TWO statements about identity and access management (IAM) policies are accurate?",
+                options: [
+                    "A. Resource-based policies allow access by default.",
+                    "B. Resource-based policies are attached to a user, group, or role.",
+                    "C. Identity-based policies can only be attached to a single entity.",
+                    "D. Identity-based policies are attached to a user, group, or role.",
+                    "E. Access control lists (ACLs) are a form of resource-based policies."
+                ],
+                correct: "D. Identity-based policies are attached to a user, group, or role.<br>E. Access control lists (ACLs) are a form of resource-based policies."
+            },
+            {
+                question: "Which scenario describes a use case for AWS CloudTrail?",
+                options: [
+                    "A. A systems administrator wants to protect their web application from denial-of-service attacks.",
+                    "B. An account administrator wants to centrally control access permissions for groups of accounts.",
+                    "C. A developer wants to control user logins to their website.",
+                    "D. An account administrator wants the ability to track user activity on their account."
+                ],
+                correct: "D. An account administrator wants the ability to track user activity on their account."
+            },
+            {
+                question: "Which TWO statements about securing data in transit are true?",
+                options: [
+                    "A. Transport Layer Security (TLS) certificates can be managed using AWS Certificate Manager (ACM).",
+                    "B. Transport Layer Security (TLS) is a proprietary protocol that's used to secure traffic between AWS VPCs.",
+                    "C. Transport Layer Security (TLS) provides encryption of data in transit.",
+                    "D. Data moving between AWS services is encrypted using Transport Layer Security (TLS) and AWS Key Management Service (AWS KMS).",
+                    "E. Web traffic that runs over HTTP is encrypted using Transport Layer Security (TLS)."
+                ],
+                correct: "A. Transport Layer Security (TLS) certificates can be managed using AWS Certificate Manager (ACM).<br>C. Transport Layer Security (TLS) provides encryption of data in transit."
+            },
+            {
+                question: "A company must produce reports of any changes to its EC2 instance settings. Which AWS service should they use?",
+                options: [
+                    "A. AWS CloudTrail",
+                    "B. AWS Config",
+                    "C. Amazon CloudWatch",
+                    "D. AWS Artifact"
+                ],
+                correct: "B. AWS Config"
+            },
+            {
+                question: "Which option describes a capability of Amazon Virtual Private Clouds (VPCs)?",
+                options: [
+                    "A. Can span Availability Zones.",
+                    "B. Can have its address range changed as desired after creation.",
+                    "C. Can be configured as a physically isolated section of the AWS Cloud.",
+                    "D. Can belong to multiple AWS Regions."
+                ],
+                correct: "A. Can span Availability Zones."
+            },
+            {
+                question: "A network administrator wants to run their e-commerce web application on a Virtual Private Cloud (VPC). Which TWO steps are part of setting up the VPC?",
+                options: [
+                    "A. Create the main route table.",
+                    "B. Delete the local route in the route table.",
+                    "C. Specify the range of IP addresses for the VPC.",
+                    "D. Create private and public subnets.",
+                    "E. Attach the VPC to a security group."
+                ],
+                correct: "C. Specify the range of IP addresses for the VPC.<br>D. Create private and public subnets."
+            },
+            {
+                question: "A network administrator wants to configure a public subnet and route incoming/outgoing traffic to/from an EC2 instance in the public subnet to the public internet. Which VPC feature should they use?",
+                options: [
+                    "A. A Network Address Translation (NAT) gateway",
+                    "B. An internet gateway",
+                    "C. A network access control list (ACL)",
+                    "D. VPC sharing"
+                ],
+                correct: "B. An internet gateway"
+            },
+            {
+                question: "Which requirement suggests configuring Amazon Route 53 with latency routing?",
+                options: [
+                    "A. A company wants to route traffic to only locations where they have distribution rights.",
+                    "B. A company wants to route traffic to the Region that provides the fastest experience based on performance measurements.",
+                    "C. A company wants to detect website outages and automatically redirect customers to a healthy location.",
+                    "D. A company wants to perform A/B testing and route traffic to different locations based on a percentage of traffic."
+                ],
+                correct: "B. A company wants to route traffic to the Region that provides the fastest experience based on performance measurements."
+            },
+            {
+                question: "Which statement accurately describes a content delivery network (CDN)?",
+                options: [
+                    "A. A CDN is a regional group of servers.",
+                    "B. A CDN caches frequently requested files.",
+                    "C. A CDN creates fast connections between origin servers.",
+                    "D. A CDN speeds up domain-name resolution for application servers."
+                ],
+                correct: "B. A CDN caches frequently requested files."
+            },
+            {
+                question: "Which configuration represents a valid use of security groups in a Virtual Private Cloud (VPC)?",
+                options: [
+                    "A. Set a deny rule that prevents outbound traffic from an EC2 instance in a VPC.",
+                    "B. Set a deny rule that prevents access to the subnet from the public internet.",
+                    "C. Limit inbound access to the private subnet of the VPC.",
+                    "D. Limit outbound traffic from an EC2 instance in the VPC to a specific database server."
+                ],
+                correct: "D. Limit outbound traffic from an EC2 instance in the VPC to a specific database server."
+            }
+        ];
+
+        let currentCardIndex = 0;
+        let isFlipped = false;
+        let cardOrder = [...Array(flashcards.length).keys()];
+
+        function updateCard() {
+            const card = flashcards[cardOrder[currentCardIndex]];
+            document.getElementById('questionText').textContent = card.question;
+            
+            const optionsHtml = card.options.map(option => `<div>${option.substring(3)}</div>`).join('');
+            document.getElementById('answerOptions').innerHTML = optionsHtml;
+            
+            const cleanCorrect = card.correct.replace(/[A-E]\.\s/g, '').replace(/<br>/g, '<br>');
+            document.getElementById('correctAnswer').innerHTML = `<div class="correct-answer">${cleanCorrect}</div>`;
+            
+            document.getElementById('cardCounter').textContent = `${currentCardIndex + 1} / ${flashcards.length}`;
+            
+            const progress = ((currentCardIndex + 1) / flashcards.length) * 100;
+            document.getElementById('progressBar').style.width = `${progress}%`;
+            
+            document.getElementById('prevBtn').disabled = currentCardIndex === 0;
+            document.getElementById('nextBtn').disabled = currentCardIndex === flashcards.length - 1;
+            
+            if (isFlipped) {
+                document.getElementById('flashcard').classList.remove('flipped');
+                isFlipped = false;
+            }
+        }
+
+        function flipCard() {
+            const flashcard = document.getElementById('flashcard');
+            flashcard.classList.toggle('flipped');
+            isFlipped = !isFlipped;
+        }
+
+        function nextCard() {
+            if (currentCardIndex < flashcards.length - 1) {
+                currentCardIndex++;
+                updateCard();
+            }
+        }
+
+        function previousCard() {
+            if (currentCardIndex > 0) {
+                currentCardIndex--;
+                updateCard();
+            }
+        }
+
+        function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+        }
+
+        function shuffleCards() {
+            // Shuffle the order of cards
+            for (let i = cardOrder.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [cardOrder[i], cardOrder[j]] = [cardOrder[j], cardOrder[i]];
+            }
+            
+            // Shuffle the answer options for each card
+            flashcards.forEach(card => {
+                if (card.options && card.options.length > 0) {
+                    shuffleArray(card.options);
+                }
+            });
+            
+            currentCardIndex = 0;
+            updateCard();
+        }
+
+        document.addEventListener('keydown', function(event) {
+            if (event.key === 'ArrowLeft') {
+                previousCard();
+            } else if (event.key === 'ArrowRight') {
+                nextCard();
+            } else if (event.key === ' ') {
+                event.preventDefault();
+                flipCard();
+            }
+        });
+
+        updateCard();
+    </script>
+</body>
+</html>
